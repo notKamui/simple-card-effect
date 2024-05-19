@@ -32,6 +32,7 @@ export default antfu({
   rules: {
     ...tailwindPlugin.configs.recommended.rules,
     'tailwindcss/no-custom-classname': 'off',
+    'tailwindcss/enforces-shorthand': 'off',
   },
 }, {
   files: ['**/*.ts', '**/*.tsx'],

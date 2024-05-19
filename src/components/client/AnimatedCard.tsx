@@ -2,7 +2,6 @@
 
 import type { CSSProperties, ReactElement, RefObject, TouchEventHandler } from 'react'
 import { Children, cloneElement, createElement, useMemo, useRef, useState } from 'react'
-import './styles.module.css'
 import { cn } from '@/utils/cn'
 
 function getRootElementSize(rootElementRef: RefObject<HTMLDivElement>) {
@@ -77,24 +76,14 @@ export default function AnimatedCard({
 
     setDynamicStyles({
       container: {
-        transform: `rotateX(${xRotate}deg) rotateY(${yRotate}deg) ${
-          isHovered ? ' scale3d(1.07,1.07,1.07)' : ''
-        }`,
+        transform: `rotateX(${xRotate}deg) rotateY(${yRotate}deg) ${isHovered ? ' scale3d(1.07,1.07,1.07)' : ''}`,
       },
       shine: {
-        background: `linear-gradient(${angle}deg, rgba(255, 255, 255, ${
-          ((page.pageY - offsets.top - bodyScrollTop) / rootElementHeight) * shineStrength
-        }) 0%, rgba(255, 255, 255, 0) 80%)`,
-        transform: `translateX(${offsetX * layerCount - 0.1}px) translateY(${
-          offsetY * layerCount - 0.1
-        }px)`,
+        background: `linear-gradient(${angle}deg, rgba(255, 255, 255, ${((page.pageY - offsets.top - bodyScrollTop) / rootElementHeight) * shineStrength}) 0%, rgba(255, 255, 255, 0) 80%)`,
+        transform: `translateX(${offsetX * layerCount - 0.1}px) translateY(${offsetY * layerCount - 0.1}px)`,
       },
-      layersTransform: layers.map((_, idx) => ({
-        transform: `translateX(${
-            offsetX * layerCount * ((idx) / widthCoefficient)
-          }px) translateY(${
-            offsetY * layerCount * ((idx) / widthCoefficient)
-          }px)`,
+      layersTransform: layers.map((_, index) => ({
+        transform: `translateX(${offsetX * layerCount * (index / widthCoefficient)}px) translateY(${offsetY * layerCount * (index / widthCoefficient)}px)`,
       })),
     })
   }
@@ -118,42 +107,13 @@ export default function AnimatedCard({
     })
   }
 
-  function Layers() {
-    return (
-      <div
-        className={cn(
-          'animated-card__layers relative z-[2] overflow-hidden bg-white',
-          className,
-        )}
-        style={{
-          borderRadius,
-          transformStyle: 'preserve-3d',
-          WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
-          ...style,
-        }}
-      >
-        {
-          dynamicStyles.layersTransform && Children.map(layers, (layer, index) =>
-            cloneElement(layer, {
-              className: 'transition-all duration-100 ease-out z-[4]',
-              style: {
-                ...layer.props.style,
-                ...(dynamicStyles.layersTransform[index] ?? {}),
-              },
-            }))
-        }
-      </div>
-    )
-  }
-
   return (
     <div className="flex">
       <div
         onClick={onClick}
         className={cn(
-          'animated-card',
+          'group relative z-[unset] m-[20px] h-[200px] hover:z-[9]',
           cursorPointer && 'cursor-pointer',
-          isHovered ? 'z-[9]' : 'z-[unset]',
         )}
         style={{
           borderRadius,
@@ -170,23 +130,18 @@ export default function AnimatedCard({
         onTouchEnd={handleLeave}
       >
         <div
-          className="animated-card__container relative transition-all duration-200 ease-out"
+          className="relative transition-all duration-200 ease-out"
           style={{
             borderRadius,
             ...dynamicStyles.container,
           }}
         >
           <div
-            className="animated-card__shadow absolute inset-[5%] z-0 transition-all duration-200 ease-out"
-            style={{
-              boxShadow: isHovered
-                ? '0 45px 100px rgba(14, 21, 47, 0.4), 0 16px 40px rgba(14, 21, 47, 0.4)'
-                : '0 8px 30px rgba(14, 21, 47, 0.6)',
-            }}
+            className="absolute inset-[5%] z-0 size-[90%] shadow-[0_8px_30px_rgba(14,_21,_47,_0.6)] transition-all duration-200 ease-out group-hover:shadow-[0_45px_100px_rgba(14,_21,_47,_0.4),_0_16px_40px_rgba(14,_21,_47,_0.4)]"
           >
           </div>
           <div
-            className="animated-card__shine absolute inset-0 z-[8]"
+            className="absolute inset-0 z-[8]"
             style={{
               borderRadius,
               background: `linear-gradient(135deg,rgba(255, 255, 255, ${shineStrength / 1.6}) 0%,rgba(255, 255, 255, 0) 60%)`,
@@ -194,7 +149,29 @@ export default function AnimatedCard({
             }}
           >
           </div>
-          <Layers />
+          <div
+            className={cn(
+              'animated-card__layers relative z-[2] overflow-hidden bg-white',
+              className,
+            )}
+            style={{
+              borderRadius,
+              transformStyle: 'preserve-3d',
+              WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
+              ...style,
+            }}
+          >
+            {
+              dynamicStyles.layersTransform && Children.map(layers, (layer, index) =>
+                cloneElement(layer, {
+                  className: 'transition-all duration-100 ease-out z-[4]',
+                  style: {
+                    ...layer.props.style,
+                    ...(dynamicStyles.layersTransform[index] ?? {}),
+                  },
+                }))
+            }
+          </div>
         </div>
       </div>
     </div>
