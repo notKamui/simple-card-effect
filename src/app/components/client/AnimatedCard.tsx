@@ -2,7 +2,7 @@
 
 import type { CSSProperties, ReactElement, RefObject, TouchEventHandler } from 'react'
 import { Children, cloneElement, createElement, useMemo, useRef, useState } from 'react'
-import { cn } from '@/utils/cn'
+import { cn } from '@/app/utils/cn'
 
 function getRootElementSize(rootElementRef: RefObject<HTMLDivElement>) {
   return {
