@@ -8,19 +8,28 @@ export type PictureCardProps = Readonly<{
   src: string
   alt: string
   width: number
-  height: number
   className?: string
   style?: CSSProperties
-}>
+} & (
+  {
+    height: number
+  } | {
+    aspectRatio: number
+  }
+)>
 
 export default function PictureCard({
   src,
   alt,
   width,
-  height,
   className,
   style = {},
+  ...props
 }: PictureCardProps) {
+  const height = 'height' in props
+    ? props.height
+    : width / props.aspectRatio
+
   return (
     <AnimatedCard
       className={className}
@@ -29,6 +38,7 @@ export default function PictureCard({
         height: `${height}px`,
         ...style,
       }}
+      cursorPointer={false}
     >
       <Image
         src={src}
