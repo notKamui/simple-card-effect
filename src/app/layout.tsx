@@ -18,23 +18,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className="p-5">
-          <div className="flex items-center justify-between">
-            <h1 className="text-[1.5rem]">Mathilde Petit R.</h1>
-            <nav className="flex items-center justify-between gap-20">
-              <ul className="flex gap-20">
-                <li><a href="/">Accueil</a></li>
-                <li><a href="/about">A propos</a></li>
-                <li><a href="/contact">Contact</a></li>
-              </ul>
-              <div className="button-group">
-                <button>ENG</button>
-                <button className="active">FRA</button>
-                <button>BZH</button>
-              </div>
-            </nav>
-          </div>
-        </header>
         {children}
       </body>
     </html>
